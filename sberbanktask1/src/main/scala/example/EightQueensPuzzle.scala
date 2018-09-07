@@ -1,5 +1,7 @@
 package example
 
+import example.{Coordinate => C}
+
 /*
 На прямоугольной шахматной доске размером M x N мы размещаем некоторый список шахматных фигур (кроме пешек).
 
@@ -10,22 +12,43 @@ package example
 
 Тестовые примеры:
 8 ферзей на доске 8 x 8  дают 92 расстановки
-postCount(8, 8, List(Queen, Queen, Queen, Queen, Queen, Queen, Queen, Queen)) == 92
+posCount(8, 8, List(Queen, Queen, Queen, Queen, Queen, Queen, Queen, Queen)) shouldEquals  92
 
 2 Короля, Ферзь, Ладья, Конь, Офицер на доске 6 на 9 дают 20136752 расстановки
-2 Kings, Queen, Rook, Knight, Bishop
+posCount(6,9,List(Kings, Kings, Queen, Rook, Knight, Bishop)) shouldEquals 20136752
 
 Соответственно нужно реализовать функцию
 def posCount(m: Int, n: Int, figures: List[Figure]) = ???
 
 Написать тесты на нее будет тривиально по примерам. Удачи.
-* */
 
-object Hello with App {
+*/
+
+// EightQueensPuzzle
+object EightQueensPuzzle extends App {
+
+  def posCount2() = {
+    5
+  }
 
   def posCount(m: Int, n: Int, figures: List[Figure]): Int = {
+    figures.sortBy(x => x.priority)
+
+    val board: Board = new Board(n,m)
+
+    var allCells = board.allCells
+
+    figures.foreach{ figure =>
+      figure.coord = allCells(0)
+      allCells = allCells diff figure.cellsReachedByFigure(figure.coord)
+    }
 
     5
+  }
+
+  def run(): Unit = {
+
+
   }
 
   /*
