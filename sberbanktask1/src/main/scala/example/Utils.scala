@@ -23,49 +23,36 @@ object Utils { // TODO: make  it object and call like static functions
   def allDiagsFrom(n: Int, m: Int, inC: C): mutable.ArrayBuffer[C] = {
     var cellsOfDiags: mutable.ArrayBuffer[C] = mutable.ArrayBuffer()
 
-    for(i <- inC.x until n) {
-      for (j <- inC.y until m) {
-        cellsOfDiags += C(i, j)
-      }
+    for(i <- 0 until n) {
+      cellsOfDiags += C(i, i)
+      cellsOfDiags += C(i, n - i - 1)
     }
 
-    for(i <- inC.x to 0) {
-      for (j <- inC.y to 0) {
-        cellsOfDiags += C(i, j)
-      }
-    }
-
-    for(i <- inC.x until n) {
-      for (j <- inC.y to 0) {
-        cellsOfDiags += C(i, j)
-      }
-    }
-
-    for(i <- inC.x to 0) {
-      for (j <- inC.y until m) {
-        cellsOfDiags += C(i, j)
-      }
-    }
-
-    cellsOfDiags
+    cellsOfDiags.distinct - inC
   }
 
+  // Unit tested
   def allLeftRightUpDown(n: Int, m: Int, inC: C): mutable.ArrayBuffer[C] = {
     var cellsLRUD: mutable.ArrayBuffer[C] = mutable.ArrayBuffer()
 
-    for(i <- inC.x until n)
-      cellsLRUD += C(i, inC.y)
+//    for(i <- inC.x + 1 until n)
+//      cellsLRUD += C(i, inC.y)
+//
+//    for(i <- inC.x - 1 to 0 by -1)
+//      cellsLRUD += C(i, inC.y)
+//
+//    for(j <- inC.y + 1 until m)
+//      cellsLRUD += C(inC.x, j)
+//
+//    for(j <- inC.y - 1 to 0 by -1)
+//      cellsLRUD += C(inC.x, j)
 
-    for(i <- inC.x to 0)
+    for(i <- 0 until n)
       cellsLRUD += C(i, inC.y)
-
-    for(j <- inC.y until m)
+    for(j <- 0 until m)
       cellsLRUD += C(inC.x, j)
 
-    for(j <- inC.y to 0)
-      cellsLRUD += C(inC.x, j)
-
-    cellsLRUD
+    cellsLRUD.distinct - inC
   }
 
   def allKingCells(n: Int, m: Int, inC: C): mutable.ArrayBuffer[C] = {

@@ -29,6 +29,27 @@ def posCount(m: Int, n: Int, figures: List[Figure]) = ???
 // EightQueensPuzzle
 object EightQueensPuzzle extends App {
 
+  val rookIn5x5_PosibPlaces = mutable.ArrayBuffer(
+    C(2,0), C(2,1), C(2,3), C(2,4), // UpD
+    C(0,2), C(1,2), C(3,2), C(4,2) // LeftRight
+  )
+
+  val bishopIn5x5_PosibPlaces = mutable.ArrayBuffer(
+    C(3,3), C(4,4),
+    C(3,1), C(4,0),
+    C(1,1), C(0,0),
+    C(1,3), C(0,4)
+  )
+
+  run
+
+  def run() {
+    // Utils.allLeftRightUpDown(5, 5, C(2,2)) // for Rooks
+    val answe = Utils.allDiagsFrom(5, 5, C(2,2)) -- bishopIn5x5_PosibPlaces
+    println(s"Size: ${answe.size}")
+    (answe) map(println(_))
+  }
+
 
   def basicFun(n: Int, m: Int, figs: mutable.ArrayBuffer[Figure])= {
     var ANSWER: Int = 0
@@ -138,4 +159,6 @@ object EightQueensPuzzle extends App {
   *
   *
   * */
+
+
 }
