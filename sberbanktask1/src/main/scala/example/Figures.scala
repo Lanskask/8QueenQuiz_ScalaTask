@@ -5,8 +5,8 @@ import scala.collection.mutable
 import example.{Coordinate => C}
 
 case class Coordinate(x: Int, y: Int) {
-  require(x >= 0)
-  require(y >= 0)
+//  require(x >= 0)
+//  require(y >= 0)
 }
 
 sealed trait Figure {

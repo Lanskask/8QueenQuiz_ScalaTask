@@ -35,23 +35,12 @@ object Utils { // TODO: make  it object and call like static functions
   def allLeftRightUpDown(n: Int, m: Int, inC: C): mutable.ArrayBuffer[C] = {
     var cellsLRUD: mutable.ArrayBuffer[C] = mutable.ArrayBuffer()
 
-//    for(i <- inC.x + 1 until n)
-//      cellsLRUD += C(i, inC.y)
-//
-//    for(i <- inC.x - 1 to 0 by -1)
-//      cellsLRUD += C(i, inC.y)
-//
-//    for(j <- inC.y + 1 until m)
-//      cellsLRUD += C(inC.x, j)
-//
-//    for(j <- inC.y - 1 to 0 by -1)
-//      cellsLRUD += C(inC.x, j)
-
     for(i <- 0 until n)
       cellsLRUD += C(i, inC.y)
     for(j <- 0 until m)
       cellsLRUD += C(inC.x, j)
 
+//    inBoard(cellsLRUD.distinct - inC)
     cellsLRUD.distinct - inC
   }
 
@@ -70,7 +59,7 @@ object Utils { // TODO: make  it object and call like static functions
     //    if(inC.y != 0)
     cellsKing += C(inC.x, inC.y - 1)
 
-    cellsKing.filter{case C(x,y) => x >= 0 && y >= 0}
+    inBoard(cellsKing)
   }
 
   def allKnightCells(n: Int, m: Int, inC: C): mutable.ArrayBuffer[C] = {
@@ -109,7 +98,11 @@ object Utils { // TODO: make  it object and call like static functions
     //    if(inC.x != 0 && inC.y != m - 2)
     cellsKnight += C(inC.x - 1, inC.y + 2)
 
-    cellsKnight.filter{case C(x,y) => x >= 0 && y >= 0}
+    inBoard(cellsKnight)
+  }
+
+  def inBoard(arr: mutable.ArrayBuffer[C]): mutable.ArrayBuffer[C] = {
+    arr.filter{case C(x,y) => x >= 0 && y >= 0}
   }
 
 }

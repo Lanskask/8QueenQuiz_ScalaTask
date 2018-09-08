@@ -15,6 +15,10 @@ class EightQueensPuzzleSpec extends FlatSpec with Matchers {
 //    EightQueensPuzzle.posCount2() shouldEqual 5
 //  }
 
+  val king_5x5_PosibPlaces = mutable.ArrayBuffer(
+    C(1,2), C(3,2), C(2,3), C(2,1)
+  )
+
   val knightIn5_5_PosibPlaces = mutable.ArrayBuffer(
     C(3,4), C(4,3), C(4,1), C(3,0),
     C(1,0), C(0,1), C(0,3), C(1,4)
@@ -42,6 +46,14 @@ class EightQueensPuzzleSpec extends FlatSpec with Matchers {
 
   "knightIn5_5_PosibPlaces" should "equal answers" in {
     arraySorted(Utils.allKnightCells(5, 5, C(2,2))) shouldEqual arraySorted(knightIn5_5_PosibPlaces)
+  }
+
+  "King In 5_5_PosibPlaces" should "equal answers" in {
+    arraySorted(Utils.allKingCells(5, 5, C(2,2))) shouldEqual arraySorted(king_5x5_PosibPlaces)
+  }
+
+  "King In 5_5_PosibPlaces IN THE CONNER" should "equal answers" in {
+    arraySorted(Utils.allKingCells(5, 5, C(0,0))) shouldEqual arraySorted(mutable.ArrayBuffer( C(1,0), C(0,1) ))
   }
 
   "THISArrays: Queens places == Rook ++ Bishop places" should "equal answers" in {
