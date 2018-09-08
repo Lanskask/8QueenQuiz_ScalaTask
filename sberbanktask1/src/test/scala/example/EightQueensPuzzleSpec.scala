@@ -1,8 +1,9 @@
 package example
 
 import example.{Coordinate => C}
-import example.Board._
+//import example.Board._
 
+import example.Rook
 import org.scalatest._
 
 import scala.collection.mutable
@@ -20,19 +21,25 @@ class EightQueensPuzzleSpec extends FlatSpec with Matchers {
   ).sortBy{case C(x, y) => x}
 
   "knightIn5_5_PosibPlaces" should "equal answers" in {
-    val board: Board = new Board(5,5)
+//    val board: Board = new Board(5,5)
 //    board.allKnightCells(Coordinate(2,2)).map(x => println(x))
-    board.allKnightCells(C(2,2)).sortBy{case C(x,y) => x} shouldEqual knightIn5_5_PosibPlaces
-    /*board.allKnightCells(Coordinate(2,2)).map{case Coordinate(x,y) => x}.sorted*/
-  }
+    Utils.allKnightCells(5, 5, C(2,2)).sortBy{case C(x,y) => x} shouldEqual knightIn5_5_PosibPlaces
+    /*board.allKnightCells(Coordinate(2,2)).map{case Coordinate(x,y) => x}.sorted
+  }*/
 
-  "8 Queens at 8 x 8" should "92 positions" in {
+  /*"8 Queens at 8 x 8" should "92 positions" in {
     val board: Board = new Board(8,8)
     EightQueensPuzzle.posCount(8, 8, List(board.Queen, board.Queen, board.Queen, board.Queen, board.Queen, board.Queen, board.Queen, board.Queen)) shouldEqual  92
+  }*/
+
+  "3 Rooks at 3 x 3" should "DONT KNOW" in {
+    val board: Board = new Board(3,3)
+    EightQueensPuzzle.posCount(3, 3, List(Rook(3, 3), Rook(3, 3), Rook(3, 3))) shouldEqual 3
   }
 
-  "2 Kings, Queen, Rook, Knight, Bishop at board 6 x 9" should " 20136752 positions" in {
+
+  /*"2 Kings, Queen, Rook, Knight, Bishop at board 6 x 9" should " 20136752 positions" in {
     EightQueensPuzzle.posCount(6,9,List(Kings, Kings, Queen, Rook, Knight, Bishop)) shouldEqual 20136752
-  }
+  }*/
 
 }
