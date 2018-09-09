@@ -28,7 +28,7 @@ object Utils { // TODO: make  it object and call like static functions
       cellsOfDiags += C(i, n - i - 1)
     }
 
-    cellsOfDiags.distinct - inC
+    cellsOfDiags - inC - inC
   }
 
   // Unit tested
@@ -41,7 +41,7 @@ object Utils { // TODO: make  it object and call like static functions
       cellsLRUD += C(inC.x, j)
 
 //    inBoard(cellsLRUD.distinct - inC)
-    cellsLRUD.distinct - inC
+    cellsLRUD - inC -inC
   }
 
   def allKingCells(n: Int, m: Int, inC: C): mutable.ArrayBuffer[C] = {
@@ -59,7 +59,7 @@ object Utils { // TODO: make  it object and call like static functions
     //    if(inC.y != 0)
     cellsKing += C(inC.x, inC.y - 1)
 
-    inBoard(cellsKing)
+    inBoard(cellsKing, n, m)
   }
 
   def allKnightCells(n: Int, m: Int, inC: C): mutable.ArrayBuffer[C] = {
@@ -98,11 +98,11 @@ object Utils { // TODO: make  it object and call like static functions
     //    if(inC.x != 0 && inC.y != m - 2)
     cellsKnight += C(inC.x - 1, inC.y + 2)
 
-    inBoard(cellsKnight)
+    inBoard(cellsKnight, n, m)
   }
 
-  def inBoard(arr: mutable.ArrayBuffer[C]): mutable.ArrayBuffer[C] = {
-    arr.filter{case C(x,y) => x >= 0 && y >= 0}
+  def inBoard(arr: mutable.ArrayBuffer[C], n: Int, m: Int): mutable.ArrayBuffer[C] = {
+    arr.filter{case C(x,y) => x >= 0 && x < n && y >= 0 && y < m}
   }
 
 }
