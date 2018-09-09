@@ -15,7 +15,7 @@ import scala.collection.mutable.ArrayBuffer
 
 Тестовые примеры:
 8 ферзей на доске 8 x 8  дают 92 расстановки
-posCount(8, 8, List(Queen, Queen, Queen, Queen, Queen, Queen, Queen, Queen)) shouldEquals  92
+posCount(8, 8, List(Queen, Queen, Queen, Queen, Queen, Queen, Queen, Queen)) shouldEquals 92
 
 2 Короля, Ферзь, Ладья, Конь, Офицер на доске 6 на 9 дают 20136752 расстановки
 posCount(6,9,List(Kings, Kings, Queen, Rook, Knight, Bishop)) shouldEquals 20136752
@@ -39,7 +39,8 @@ object EightQueensPuzzle extends App {
   val numOfFields = n * m // boardSize
   var figInd: Int = 0
   var firstFigPosInd: Int = 0
-  var resultCollocations = ArrayBuffer[Figure]()
+  var thisCollocation = ArrayBuffer[Figure]() // массив фигур - их координаты, типы и названия
+  var resultCollocations = ArrayBuffer[ArrayBuffer[Figure]]()
 
   def posCount(_m: Int, _n: Int, figures: List[Figure]): Int = {
     // Инициализация
@@ -48,31 +49,31 @@ object EightQueensPuzzle extends App {
     figs = figs.sortBy(x => x.priority)
     allCells = Utils.allCells(n, m)
 
-    basicFun()
-  }
-
-  def basicFun()= {
-    // Ставим сначала на первое место первую фигуру
-    // Ставим первую фигуру по всем клеткам доски
+    // Ставим первую фигуру из отсортированного по приоритету массива фигур по всем клеткам доски
     for(firstFigPosInd_2 <- 0 until numOfFields) {
       servFigs(firstFigPosInd_2, 0)
     }
 
-//    for(firstFigPosInd_2 <- 0 until numOfFields) {
-//      for(figInd_2 <- figs.indices) {
-//        servFigs(firstFigPosInd_2, figInd_2)
-//      }
-//    }
-    
-    servFigs(0, 0 /*с первой фигуры*/)
-
+    // Если все фигуры кончились
+    //  если каждая фигура начиная с конца поменяла своё первое положение по всем клеткам на которым она изначально могла встать
+    //  если первая фигура поменяла своё место положение по всем клеткам
+    //
+    // То заканциваем пробегание, заканчиваемм программу и выписываем результат
+    printResult()
     ANSWER
   }
 
-  // Если фигуры кончились, то ANSWER + 1
-  //    записываем эту расстановку в память удавшихся расстановок
+  // TODO: Сделать backtracking по графу
+  // TOD: Сделать Класс (или type) Collocation: ArrayBuffer[ArrayBuffer[Figure]()]()
+
+  // ---- TODO: Куда это вставить ---------- ?
+  // Если фигуры при построении этой расстановки (thisCollocation) кончились, то ANSWER + 1
+  //    записываем эту расстановку в память удавшихся расстановок:    resultCollocations += thisCollocation
+  //    можно пойти вверх по графу этой расстановки
+  //      зная какие там свободные клетки, можно поставить обрабатываемую фигуру в другую клетку
+  //      и провести операции по проверке пересечения ещё раз
   //    можно поставить последнюю фигуру в другую клетку в отличии от первой
-  //    (backtracking)
+  //      (backtracking)
 
   def servFigs(_firstFigPosInd: Int, figInd: Int): Int = {
     if(figInd < figs.size - 1) { // for(i <- 0 until numOfFields) {
@@ -101,54 +102,24 @@ object EightQueensPuzzle extends App {
       minusThisFig(inAllCellsPos + 1, fig)
     } else {
       // Если не пересекается,
-      //  записываем эту фигуру
+      //  записываем позицию этой фигуры в предыдущие позиции фигур
+      //  записываем эту фигуру в массив всех фигур уже расставленных
       //  выписываем из всех оставшихся клеток доски позицию этой фигуры
       //  выписываем из всех оставшихся клеток доски, те клетки, которые пересекает эта фигура
       // и переходим к другой фигуре
       presPossits += fig.coord
+      thisCollocation += fig
       allCells -= fig.coord
       allCells --= fig.cellsReachedByFigure(fig.coord)
       servFigs(firstFigPosInd, figInd + 1) // переходим к следующей фигуре
     }
   }
 
-  //  def servThisFig(i: Int, j: Int/**/, fig: Figure): Unit = {
-//    fig.coord = allCells(0)
-//
-//    // Если пересекается -> перемещаем эту фигуру в следущую клетку
-//    if ((presPossits intersect fig.cellsReachedByFigure(fig.coord)).nonEmpty) {
-//      servThisFig(i, j + 1 /**/ , fig)
-//    } else { // Если не пересекается, записываем эту фигуру и переходим к другой фигуре
-//      allCells -= fig.coord
-//      presPossits += fig.coord
-//      allCells --= fig.cellsReachedByFigure(fig.coord)
-//      servFigs(i + 1, n, m)
-//    }
-//  }
-
-
-  // ------------------
-
-
-  def posCount2(m: Int, n: Int, figures: List[Figure]): Int = {
-
-    /*for(i <- figs.indices) {
-      figs(i).coord = allCells(0); allCells -= allCells(0)
-      allCells --= figs(i).cellsReachedByFigure(figs(i).coord)
-      // дали следующей фигуре песрвый из оставшихся allCells; убрали эту координатуу из allCells
-      figs(i+1).coord = allCells(0); allCells -= allCells(0)
-      // var previosPositions = mutable.ArrayBuffer()
-      //     for fig in (figs 'downwords') previosPositions += fig.coord
-      if(figs(i+1).cellsReachedByFigure(figs(i+1).coord ) contains previosPositions
-      )
-        figs(i+1).coord = allCells(0)*/
-
-//    .foreach{ figure =>
-//      figure.coord = allCells(0)
-//      allCells = allCells - allCells(0)
-//      allCells --= figure.cellsReachedByFigure(figure.coord)
-//    }
-    5
+  // -------------------
+  def printResult(): Unit = {
+    println(s"Для размера доски n = $n, m = $m и набора фигур: ")
+    figs.foreach(println(_))
+    println(s" существует $ANSWER перестановок фигур, таких что ни одна из них не \"бьёт\" другую ")
   }
 
 }
