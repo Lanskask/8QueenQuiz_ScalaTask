@@ -3,6 +3,7 @@ package example
 import example.{Coordinate => C}
 
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 //class Utils(_n: Int, _m: Int) { // TODO: make  it object and call like static functions
 object Utils { // TODO: make  it object and call like static functions
@@ -105,4 +106,23 @@ object Utils { // TODO: make  it object and call like static functions
     arr.filter{case C(x,y) => x >= 0 && x < n && y >= 0 && y < m}
   }
 
+
+  def nQueens(n: Int, m: Int, numOfFigs: Int): List[Queen] = {
+//    var list: List[Queen] = Nil
+//    for(i <- 0 until numOfFigs)
+//      list = list ::: List(Queen(n,m))
+//    list
+    List.fill(numOfFigs)(Queen(n,m))
+  }
+
+  // TODO: Make this methods
+  def fillNFigures(n: Int, m: Int, numOfFigs: Int, fig: Figure): List[Figure] = {
+    var result = List[Figure]()
+    for(i <- 0 to numOfFigs) {
+      fig.coord = C(0,0)
+      fig :: result
+    }
+    result
+//    List.fill(numOfFigs)(fig(n,m))
+  }
 }
