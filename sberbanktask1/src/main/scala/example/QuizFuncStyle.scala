@@ -8,68 +8,57 @@ import scala.collection.mutable.ArrayBuffer
 object QuizFuncStyle extends App {
 //  val (n, m) = (args(0).toInt, args(1).toInt)
 //  val (n, m) = (3, 3)
-  val (n, m) = (4, 4) // for Rook, Bishop, Knight
-//  var figs = List(Rook(n,m), Rook(n,m), Rook(n,m)).sortBy(x => x.priority)
-  var figs = List(Rook(n,m), Bishop(n,m), Knight(n,m)).sortBy(x => x.priority)
-  var allCells = Utils.allCells(n, m)
 
-  //  /*.filter(
-  //      comb => isPossible(comb.toArray)
-  //    )*/
-  ////    .filter(coords  => coords forall )
-  ////    .filter{ coords =>
-  ////      coords
+  var (n, m) = (4, 4) // for Rook, Bishop, Knight
+  var figs = List[Figure]()
+  var allCells = ArrayBuffer[C]()
 
-//  allCells.foreach(x => print(s"$x, "))
+  def posCount(_m: Int, _n: Int, figures: List[Figure]): Int = {
+    n = _n; m = _m
+    allCells = Utils.allCells(n, m)
 
-//  allCells.combinations(figs.size) // figs.size = 3
-//        .combinations(2)
-//        .forall{
-//          case List(c1,c2) =>
-//            c1.x != c2.x 	&&
-//              c1.y != c2.y
-////      }
-//    }
-//    .foreach(println(_))
-//    .filter(comb => isSafe(comb.toArray)).foreach(println(_))
-
-  /*def isPossible(combs: Array[C]): Boolean = {
-    var answ = false
-    for(comb <- combs) {
-//      if(isIntersectColoc(fig1, ))
-//        if(atackForRook(comb, combs diff List(comb)))
-//        if(isSafe(comb, combs diff List(comb)))
-        if(isSafe(comb, combs))
-          answ = false
-        else
-          answ = true
+    if(allTheSameClass(figures)) {
+      return answerForSame(n, m, figs)
+    } else {
+      figs = figures.sortBy(x => x.priority)
+      return answerForDiff(n, m, figs)
     }
-    answ
-  }*/
-  //    val fig1 = figs(0)
-  //    fig1.coord = comb(0)
+  }
 
-  var allPermutations = List[List[C]]()
+  var figs1 = List(Rook(n,m), Rook(n,m), Rook(n,m)).sortBy(x => x.priority)
+  var figs2 = List(Rook(n,m), Bishop(n,m), Knight(n,m)).sortBy(x => x.priority)
 
-  allCells.toList.combinations(3).foreach(x => allPermutations = allPermutations ++ x.permutations.toList)
+//  posCount(8, 8, Utils.nQueens(8,8,8)) // shouldEquals 92
+//  posCount(6,9,List(Kings, Kings, Queen, Rook, Knight, Bishop)) // shouldEquals 20136752
+//  posCount(4, 4, figs1)
+  println(posCount(4, 4, figs2) )
 
-  allPermutations.foreach(println(_))
 
-  var ans2 = allPermutations.count(x => scanListVarios(x))
+//  var allCells = Utils.allCells(n, m)
 
-  println(ans2)
-
-  // -----------------
-  /*def answerForRooks(n: Int, m: Int, figs: List[Rook]): Int = { // for rooks
-    Utils.allCells(n, m).toList
+  def answerForSame(n: Int, m: Int, figs: List[Figure]): Int = { // for rooks
+    val combinations = allCells.toList
       .combinations(figs.size)
-      .toList.count(x => scanList(x))
-  }*/
+      .toList.filter(x => scanList(x))
 
-  // TODO: Переделать листы от C в листы от Figure
+    combinations.foreach(println(_))
+    combinations.size
+  }
 
-  def scanListVarios(list: List[C]): Boolean = {
-    list.forall(x => isSafeDiff(x, list.indexOf(x) , list diff List(x)))
+  def answerForDiff(n: Int, m: Int, figs: List[Figure]): Int = {
+    var allPermutations = List[List[C]]()
+
+    allCells.toList.combinations(figs.size).foreach(x => allPermutations = allPermutations ++ x.permutations.toList)
+
+    val result = allPermutations.filter(x => scanList2(x))
+
+    result.foreach(println(_))
+    result.size
+  }
+
+  def scanList2(list: List[C]): Boolean = {
+//    list.forall(x => isSafe2(x, list.indexOf(x) , list diff List(x)))
+    list.forall(x => isSafe3(x, list.indexOf(x) , list diff List(x)))
   }
 
   /**
@@ -79,25 +68,40 @@ object QuizFuncStyle extends App {
     * @param others
     * @return
     */
-  def isSafeDiff(c: C, figInd: Int, others: List[C]): Boolean = {
-    var ans = false
+  def isSafe2(c: C, figInd: Int, others: List[C]): Boolean = {
     if(figs(figInd).isInstanceOf[Queen])
-      ans = others forall(!isAttackedForQueen(c, _))
+      return others forall(!isAttackedForQueen(c, _))
     if(figs(figInd).isInstanceOf[Rook])
-      ans = others forall(!isAttackedForRook(c, _))
+      return others forall(!isAttackedForRook(c, _))
     if(figs(figInd).isInstanceOf[Bishop])
-      ans = others forall(!isAttackedForBishop(c, _))
+      return others forall(!isAttackedForBishop(c, _))
     if(figs(figInd).isInstanceOf[Knight])
-      ans = others forall(!isAttackedForKnight(c, _))
+      return others forall(!isAttackedForKnight(c, _))
     if(figs(figInd).isInstanceOf[King])
-      ans = others forall(!isAttackedForKing(c, _))
-
-    ans
+      return others forall(!isAttackedForKing(c, _))
+    else
+      false
   }
 
-  // ---------- For the same ---
+  def isSafe3(c: C, figInd: Int, others: List[C]): Boolean = figs(figInd) match {
+    case a: Queen =>
+      others forall(!isAttackedForQueen(c, _))
+    case a: Rook =>
+        others forall(!isAttackedForRook(c, _))
+    case a: Bishop =>
+        others forall(!isAttackedForBishop(c, _))
+    case a: Knight =>
+        others forall(!isAttackedForKnight(c, _))
+    case a: King =>
+        others forall(!isAttackedForKing(c, _))
+    case _ =>
+        false
+  }
+
+    // ---------- For the same if Rooks ---
   def scanList(list: List[C]): Boolean = {
-    list.forall(x => isSafe(x, list diff List(x)))
+//    list.forall(x => isSafe(x, list diff List(x)))
+    list.forall(x => isSafe3(x, 0, list diff List(x)))
   }
 
   def isSafe(c: C,/*fig: Figure, */others: List[C]): Boolean = {
@@ -105,7 +109,16 @@ object QuizFuncStyle extends App {
     others forall(!isAttackedForRook(c, _))
   }
 
-  // is Attacked
+  // -- some little utils ---
+  def allTheSameClass(figs: List[Figure]): Boolean = {
+    var ans = false
+    for(i <- 0 until figs.size - 1) {
+      if(figs(i).getClass == figs(i+1).getClass ) ans = true
+    }
+    ans
+  }
+
+  // --------- is Attacked
   def isAttackedForQueen(q1: C, q2: C): Boolean = {
     q1.x == q2.x ||
       q1.y == q2.y ||
@@ -116,10 +129,8 @@ object QuizFuncStyle extends App {
     r1.x == r2.x || r1.y == r2.y
   }
 
-  // TODO: Check this func
   def isAttackedForBishop(q1: C, q2: C): Boolean = { // should be
-    Utils.allDiagsFrom(n,m, q1) contains q2 // or
-    //    (q2.x-q1.x).abs == (q2.y-q1.y).abs
+    (q2.x-q1.x).abs == (q2.y-q1.y).abs
   }
 
   /**
@@ -128,7 +139,6 @@ object QuizFuncStyle extends App {
     * @return
     */
   def isAttackedForKnight(q1: C, q2: C): Boolean = {
-//    q1.x == q2.x ||
       Utils.allKnightCells(n,m, q1) contains q2
   }
 

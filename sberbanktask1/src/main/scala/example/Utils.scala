@@ -21,12 +21,13 @@ object Utils { // TODO: make  it object and call like static functions
   }
 
   // Possible Figure movements
+  // TODO: Written wrong
   def allDiagsFrom(n: Int, m: Int, inC: C): mutable.ArrayBuffer[C] = {
     var cellsOfDiags: mutable.ArrayBuffer[C] = mutable.ArrayBuffer()
 
     for(i <- 0 until n) {
       cellsOfDiags += C(i, i)
-      cellsOfDiags += C(i, n - i - 1)
+      cellsOfDiags += C(i, n - i - 1) // TODO: I think error is here
     }
 
     cellsOfDiags - inC - inC
