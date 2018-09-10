@@ -83,7 +83,8 @@ object EightQueensPuzzle extends App {
   //    можно поставить последнюю фигуру в другую клетку в отличии от первой
   //      (backtracking)
 
-
+  // функция nextCell
+  // если клетки кончились то выходим
   def forAllCells(figInd: Int, cellInd: Int/*, allCells: ArrayBuffer[Figure]()*//*, numOfFields*/): Unit = {
     // для всех свободных клеток этой выбранной фигуры
     for(cellInd <- 0 until (n * m)) {
@@ -97,11 +98,9 @@ object EightQueensPuzzle extends App {
     }
   }
 
-  // TODO: Куда вставлять в этой функции cellInd, а куда figInd ?
   def forAllOtherFigs(_figInd: Int, cellInd: Int): Unit = {
 
-    // TODO: Что такое вообще _firstFigPosInd ? На что заменить?
-    for (figInd <- _figInd to figs.size) { // TODO: Здесь _figInd или _figInd + 1 ?
+    for (figInd <- _figInd to figs.size) {
       var fig = figs(figInd)
       fig.coord = allCells(cellInd)
 //      if (isIntersect(fig , presPossits)) {
@@ -169,7 +168,7 @@ object EightQueensPuzzle extends App {
   }*/
 
   // -------------------
-  def initialization(_m: Int, _n: Int, figures: List[Figure]) = {
+  def initialization(_m: Int, _n: Int, figures: List[Figure]): Unit = {
     n = _n; m = _m
     figures.foreach(fig => figs += fig)
     figs = figs.sortBy(x => x.priority)
@@ -177,7 +176,7 @@ object EightQueensPuzzle extends App {
   }
 
   // Опустошение предыдуще заполненных массивов
-  def deinitialization() = {
+  def deinitialization(): Unit = {
     figInd = 0
     firstFigPosInd = 0
     thisCollocation = ArrayBuffer[Figure]()
