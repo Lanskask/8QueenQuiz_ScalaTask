@@ -28,10 +28,10 @@ object QuizFuncStyle extends App {
   var figs1 = List(Rook(n,m), Rook(n,m), Rook(n,m)).sortBy(x => x.priority)
   var figs2 = List(Rook(n,m), Bishop(n,m), Knight(n,m)).sortBy(x => x.priority)
 
-//  posCount(8, 8, Utils.nQueens(8,8,8)) // shouldEquals 92
+  println(posCount(8, 8, Utils.nQueens(8,8,8))) // shouldEquals 92
 //  posCount(6,9,List(Kings, Kings, Queen, Rook, Knight, Bishop)) // shouldEquals 20136752
 //  posCount(4, 4, figs1)
-  println(posCount(4, 4, figs2) )
+  println(posCount(4, 4, figs2))
 
 
 //  var allCells = Utils.allCells(n, m)
@@ -41,7 +41,7 @@ object QuizFuncStyle extends App {
       .combinations(figs.size)
       .toList.filter(x => scanList(x))
 
-    combinations.foreach(println(_))
+//    combinations.foreach(println(_))
     combinations.size
   }
 
